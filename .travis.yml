@@ -13,7 +13,7 @@ before_install:
 script:
   - docker run abarth/divand-jupyterhub /opt/julia-0.6.4/bin/julia --eval 'Pkg.test("DIVAnd")'
 after_success:
-  - if [ "TRAVIS_BRANCH" == master ]; then
+  - if [ "$TRAVIS_BRANCH" == master ]; then
        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
        docker push abarth/divand-jupyterhub;
     fi
