@@ -1,0 +1,19 @@
+sudo: required
+language: bash
+services:
+  - docker
+os:
+  - linux
+notifications:
+  email: false
+before_install:
+  - sudo docker build -t abarth/divand-jupyterhub .
+  - docker run --detach --name=divand-jupyterhub-container -it -p 8002:8002 abarth/divand-jupyterhub
+  - docker ps -a
+script:
+  - docker run abarth/divand-jupyterhub /opt/julia-0.6.4/bin/julia --eval 'Pkg.test("DIVAnd")'
+after_success:
+  - if [ "TRAVIS_BRANCH" == master ]; then
+       echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+       docker push abarth/divand-jupyterhub;
+    fi
