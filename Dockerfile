@@ -17,6 +17,7 @@ RUN apt-get install -y ca-certificates curl libnlopt0 make gcc
 #RUN DEBIAN_FRONTEND=noninteractive apt-get install -y davfs2
 RUN apt-get install -y libzmq3-dev
 RUN apt-get install -y emacs
+RUN apt-get install -y git g++
 
 ENV JUPYTER /opt/conda/bin/jupyter
 ENV PYTHON /opt/conda/bin/python
@@ -38,35 +39,33 @@ RUN rm install_julia.sh
 
 USER jovyan
 
-RUN julia --eval 'Pkg.init()'
+#RUN julia --eval 'using Pkg; Pkg.init()'
 
-RUN i=ZMQ; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=IJulia; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=NetCDF; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=PyPlot; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=Interpolations; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=MAT; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=JSON; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=NullableArrays; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=SpecialFunctions; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=Interact; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=Roots; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=Requests; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=Gumbo; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=AbstractTrees; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=Glob; julia --eval "Pkg.add(\"$i\"); using $i"
+RUN i=ZMQ; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=IJulia; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=NetCDF; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=PyPlot; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Interpolations; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+#RUN i=MAT; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+#RUN i=JLD; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=JSON; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=SpecialFunctions; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Interact; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Roots; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Gumbo; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=AbstractTrees; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Glob; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=NCDatasets;   julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
-RUN julia --eval 'Pkg.update()'
+RUN i=PhysOcean; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
-RUN i=NCDatasets;   julia --eval "Pkg.add(\"$i\"); using $i"
+RUN i=OceanPlot;  julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
+RUN i=DIVAnd;      julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
 
-RUN i=PhysOcean; julia --eval "Pkg.add(\"$i\"); using $i"
+RUN i=Knet; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
-RUN i=OceanPlot;  julia --eval "Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
-RUN i=DIVAnd;      julia --eval "Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
-
-RUN i=Knet; julia --eval "Pkg.add(\"$i\"); using $i"
-RUN i=CSV; julia --eval "Pkg.add(\"$i\"); using $i"
+#RUN i=PhysOcean; julia --eval "using Pkg; Pkg.checkout(\"$i\"); using $i"
 
 
 #USER root
@@ -75,12 +74,15 @@ RUN i=CSV; julia --eval "Pkg.add(\"$i\"); using $i"
 #RUN cp -Rp /home/jovyan/.local/share/jupyter/kernels/julia-0.6 /usr/local/share/jupyter/kernels/
 
 # no depreciation warnings
-#RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /usr/local/share/jupyter/kernels/julia-0.6/kernel.json
-RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-0.6/kernel.json
+RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.0/kernel.json
 
 # avoid warnings
 # /bin/bash: /opt/conda/lib/libtinfo.so.5: no version information available (required by /bin/bash)
 RUN mv /opt/conda/lib/libtinfo.so.5 /opt/conda/lib/libtinfo.so.5-conda
+
+# avoid warning
+# curl: /opt/conda/lib/libcurl.so.4: no version information available (required by curl)
+mv -i /opt/conda/lib/libcurl.so.4 /opt/conda/lib/libcurl.so.4-conda
 
 # remove unused kernel
 RUN rm -R /opt/conda/share/jupyter/kernels/python3
@@ -94,15 +96,19 @@ RUN cd /data;  \
     wget -O master.zip https://github.com/gher-ulg/Diva-Workshops/archive/master.zip; unzip master.zip; \
     rm /data/master.zip
 
-RUN apt-get install -y git g++
 
 USER jovyan
+RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
-RUN i=PhysOcean; julia --eval "Pkg.checkout(\"$i\"); using $i"
-RUN i=JLD; julia --eval "Pkg.add(\"$i\"); using $i"
 
 ADD emacs /home/jovyan/.emacs
 
 #CMD ["bash", "/usr/local/bin/start-singleuser.sh","--KernelSpecManager.ensure_native_kernel=False"]
+
+
+# fix MAT
+RUN julia --eval "import Pkg; Pkg.develop("MAT")"
+RUN cd ~/.julia/dev/MAT; git pull origin pull/91/head
 
 CMD ["bash", "/usr/local/bin/run.sh"]
