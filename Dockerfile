@@ -82,7 +82,7 @@ RUN mv /opt/conda/lib/libtinfo.so.5 /opt/conda/lib/libtinfo.so.5-conda
 
 # avoid warning
 # curl: /opt/conda/lib/libcurl.so.4: no version information available (required by curl)
-mv -i /opt/conda/lib/libcurl.so.4 /opt/conda/lib/libcurl.so.4-conda
+RUN mv -i /opt/conda/lib/libcurl.so.4 /opt/conda/lib/libcurl.so.4-conda
 
 # remove unused kernel
 RUN rm -R /opt/conda/share/jupyter/kernels/python3
@@ -104,11 +104,8 @@ RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
 ADD emacs /home/jovyan/.emacs
 
-#CMD ["bash", "/usr/local/bin/start-singleuser.sh","--KernelSpecManager.ensure_native_kernel=False"]
-
-
 # fix MAT
-RUN julia --eval "import Pkg; Pkg.develop("MAT")"
+RUN julia --eval 'import Pkg; Pkg.develop("MAT")'
 RUN cd ~/.julia/dev/MAT; git pull origin pull/91/head
 
 CMD ["bash", "/usr/local/bin/run.sh"]
