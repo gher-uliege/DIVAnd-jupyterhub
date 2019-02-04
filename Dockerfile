@@ -56,14 +56,14 @@ RUN i=Gumbo; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=AbstractTrees; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=Glob; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=NCDatasets;   julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=Knet; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
 RUN i=PhysOcean; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
 RUN i=OceanPlot;  julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
-RUN i=DIVAnd;      julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
+RUN i=DIVAnd;       julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
 
-RUN i=Knet; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
 #RUN i=PhysOcean; julia --eval "using Pkg; Pkg.checkout(\"$i\"); using $i"
 
@@ -105,7 +105,7 @@ RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 ADD emacs /home/jovyan/.emacs
 
 # fix MAT
-RUN julia --eval 'import Pkg; Pkg.develop("MAT")'
-RUN cd ~/.julia/dev/MAT; git pull origin pull/91/head
+#RUN julia --eval 'import Pkg; Pkg.develop("MAT")'
+#RUN cd ~/.julia/dev/MAT; git pull origin pull/91/head
 
 CMD ["bash", "/usr/local/bin/run.sh"]
