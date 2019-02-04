@@ -18,6 +18,7 @@ RUN apt-get install -y ca-certificates curl libnlopt0 make gcc
 RUN apt-get install -y libzmq3-dev
 RUN apt-get install -y emacs
 RUN apt-get install -y git g++
+RUN apt-get install -y davfs2
 
 ENV JUPYTER /opt/conda/bin/jupyter
 ENV PYTHON /opt/conda/bin/python
@@ -78,7 +79,7 @@ RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/ke
 
 # avoid warnings
 # /bin/bash: /opt/conda/lib/libtinfo.so.5: no version information available (required by /bin/bash)
-RUN mv /opt/conda/lib/libtinfo.so.5 /opt/conda/lib/libtinfo.so.5-conda
+#RUN mv /opt/conda/lib/libtinfo.so.5 /opt/conda/lib/libtinfo.so.5-conda
 
 # avoid warning
 # curl: /opt/conda/lib/libcurl.so.4: no version information available (required by curl)
@@ -100,6 +101,8 @@ RUN cd /data;  \
 USER jovyan
 RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Tables\", version=\"0.1.12\"))"
+RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Mustache\", version=\"0.5.8\"))"
 
 
 ADD emacs /home/jovyan/.emacs
@@ -107,5 +110,9 @@ ADD emacs /home/jovyan/.emacs
 # fix MAT
 #RUN julia --eval 'import Pkg; Pkg.develop("MAT")'
 #RUN cd ~/.julia/dev/MAT; git pull origin pull/91/head
+
+USER root
+RUN apt-get install -y gosu
+USER jovyan
 
 CMD ["bash", "/usr/local/bin/run.sh"]
