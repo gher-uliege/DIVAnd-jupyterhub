@@ -18,7 +18,7 @@ RUN apt-get install -y ca-certificates curl libnlopt0 make gcc
 RUN apt-get install -y libzmq3-dev
 RUN apt-get install -y emacs
 RUN apt-get install -y git g++
-RUN apt-get install -y davfs2
+###RUN apt-get install -y davfs2
 
 ENV JUPYTER /opt/conda/bin/jupyter
 ENV PYTHON /opt/conda/bin/python
