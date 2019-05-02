@@ -1,5 +1,5 @@
 using WebDAV
-
+import Base: get
 
 if isfile(expanduser("~/.test_webdav"))
    ENV["WEBDAV_USERNAME"],ENV["WEBDAV_PASSWORD"],ENV["WEBDAV_URL"] = split(read(expanduser("~/.test_webdav"),String))
@@ -25,7 +25,7 @@ end
 Download `remote_filename` from WebDAV and store it at `local_filename` (or per default a temporary random file name).
 The environement variables `WEBDAV_USERNAME`, `WEBDAV_PASSWORD` and `WEBDAV_URL` must be set.
 """
-function get(remote_filename,local_filename = tempname())
+function get(remote_filename::AbstractString,local_filename::AbstractString = tempname())
     s = default_WebDAV()
     download(s, remote_filename,local_filename)
     return local_filename
@@ -38,7 +38,7 @@ end
 Upload file `local_filename` at `remote_filename` from WebDAV.
 The environement variables `WEBDAV_USERNAME`, `WEBDAV_PASSWORD` and `WEBDAV_URL` must be set.
 """
-function put(local_filename,remote_filename)
+function put(local_filename::AbstractString,remote_filename::AbstractString)
     s = default_WebDAV()
     upload(s, local_filename, remote_filename)
     return nothing

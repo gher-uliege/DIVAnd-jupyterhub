@@ -118,8 +118,10 @@ RUN chown root:users /usr/sbin/gosu
 RUN chmod a+t /usr/sbin/gosu
 USER jovyan
 
-RUN mkdir -p emacs /home/jovyan/.julia/config
+ADD emacs /home/jovyan/.emacs
+RUN mkdir -p /home/jovyan/.julia/config
 ADD startup.jl /home/jovyan/.julia/config/startup.jl
 
+RUN julia --eval 'using Pkg; pkg"precompile"'
 
 CMD ["bash", "/usr/local/bin/run.sh"]
