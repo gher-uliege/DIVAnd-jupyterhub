@@ -63,7 +63,7 @@ RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=PhysOcean; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 
 RUN i=OceanPlot;  julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
-RUN i=DIVAnd;       julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
+RUN i=DIVAnd;        julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
 
 
 #RUN i=PhysOcean; julia --eval "using Pkg; Pkg.checkout(\"$i\"); using $i"
@@ -104,7 +104,6 @@ RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Tables\", version=\"0.1.12\"))"
 RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Mustache\", version=\"0.5.8\"))"
 
-
 ADD emacs /home/jovyan/.emacs
 
 # fix MAT
@@ -113,6 +112,11 @@ ADD emacs /home/jovyan/.emacs
 
 USER root
 RUN apt-get install -y gosu
+RUN chown root:users /usr/sbin/gosu
+RUN chmod a+t /usr/sbin/gosu
 USER jovyan
+
+
+RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
 
 CMD ["bash", "/usr/local/bin/run.sh"]
