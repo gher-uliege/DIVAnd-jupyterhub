@@ -103,6 +103,8 @@ RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Tables\", version=\"0.1.12\"))"
 RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Mustache\", version=\"0.5.8\"))"
+RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
+
 
 ADD emacs /home/jovyan/.emacs
 
@@ -116,7 +118,8 @@ RUN chown root:users /usr/sbin/gosu
 RUN chmod a+t /usr/sbin/gosu
 USER jovyan
 
+RUN mkdir -p emacs /home/jovyan/.julia/config
+ADD startup.jl /home/jovyan/.julia/config/startup.jl
 
-RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
 
 CMD ["bash", "/usr/local/bin/run.sh"]
