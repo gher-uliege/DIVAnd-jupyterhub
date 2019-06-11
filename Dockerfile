@@ -1,7 +1,7 @@
 # build as:
 # sudo docker build -t abarth/diva-julia .
 
-FROM jupyterhub/singleuser:0.8
+FROM jupyterhub/singleuser:1.0
 
 MAINTAINER Alexander Barth <a.barth@ulg.ac.be>
 
@@ -47,7 +47,7 @@ RUN i=IJulia; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=NetCDF; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=PyPlot; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=Interpolations; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-#RUN i=MAT; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=MAT; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 #RUN i=JLD; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=JSON; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=SpecialFunctions; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
@@ -75,7 +75,7 @@ RUN i=DIVAnd;        julia --eval "using Pkg; Pkg.clone(\"https://github.com/ghe
 #RUN cp -Rp /home/jovyan/.local/share/jupyter/kernels/julia-0.6 /usr/local/share/jupyter/kernels/
 
 # no depreciation warnings
-RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.0/kernel.json
+RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.1/kernel.json
 
 # avoid warnings
 # /bin/bash: /opt/conda/lib/libtinfo.so.5: no version information available (required by /bin/bash)
@@ -101,16 +101,13 @@ RUN cd /data;  \
 USER jovyan
 RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
 RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Tables\", version=\"0.1.12\"))"
-RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Mustache\", version=\"0.5.8\"))"
+#RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Tables\", version=\"0.1.12\"))"
+#RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Mustache\", version=\"0.5.8\"))"
+RUN julia --eval "using Pkg; Pkg.add(\"Mustache\")"
 RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
 
 
 ADD emacs /home/jovyan/.emacs
-
-# fix MAT
-#RUN julia --eval 'import Pkg; Pkg.develop("MAT")'
-#RUN cd ~/.julia/dev/MAT; git pull origin pull/91/head
 
 USER root
 RUN apt-get install -y gosu
