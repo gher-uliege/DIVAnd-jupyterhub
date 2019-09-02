@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JULIA_VERSION=1.1.1
+JULIA_VERSION=1.2.0
 # array with major, minor and revision number
 JULIA_VERSION_PARTS=( ${JULIA_VERSION//./ } )
 # just major and minor number

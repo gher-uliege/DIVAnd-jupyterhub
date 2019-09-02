@@ -75,7 +75,7 @@ RUN i=DIVAnd;        julia --eval "using Pkg; Pkg.clone(\"https://github.com/ghe
 #RUN cp -Rp /home/jovyan/.local/share/jupyter/kernels/julia-0.6 /usr/local/share/jupyter/kernels/
 
 # no depreciation warnings
-RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.1/kernel.json
+RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.2/kernel.json
 
 # avoid warnings
 # /bin/bash: /opt/conda/lib/libtinfo.so.5: no version information available (required by /bin/bash)
@@ -88,12 +88,11 @@ RUN mv -i /opt/conda/lib/libcurl.so.4 /opt/conda/lib/libcurl.so.4-conda
 # remove unused kernel
 RUN rm -R /opt/conda/share/jupyter/kernels/python3
 
-ADD run.sh /usr/local/bin/run.sh
 
 USER root
 # Download notebooks
 RUN mkdir /data
-RUN cd /data;  \
+RUN cd  /data;  \
     wget -O master.zip https://github.com/gher-ulg/Diva-Workshops/archive/master.zip; unzip master.zip; \
     rm /data/master.zip
 
@@ -120,5 +119,13 @@ RUN mkdir -p /home/jovyan/.julia/config
 ADD startup.jl /home/jovyan/.julia/config/startup.jl
 
 RUN julia --eval 'using Pkg; pkg"precompile"'
+
+USER root
+# Example Data
+RUN mkdir /data/Diva-Workshops-data
+RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /data/Diva-Workshops-data -zxf -
+ADD run.sh /usr/local/bin/run.sh
+USER jovyan
+
 
 CMD ["bash", "/usr/local/bin/run.sh"]
