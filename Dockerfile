@@ -40,38 +40,19 @@ RUN rm install_julia.sh
 
 USER jovyan
 
-#RUN julia --eval 'using Pkg; Pkg.init()'
 
-RUN i=ZMQ; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=IJulia; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=NetCDF; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=PyPlot; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Interpolations; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=MAT; julia --eval "using Pkg; Pkg.add(\"$i\")"
-#RUN i=JLD; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=JSON; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=SpecialFunctions; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Interact; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Roots; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Gumbo; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=AbstractTrees; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Glob; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=NCDatasets;   julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Knet; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN julia --eval 'using Pkg; pkg"add ZMQ IJulia PyPlot Interpolations MAT"'
+RUN julia --eval 'using Pkg; pkg"add JSON SpecialFunctions Interact Roots"'
+RUN julia --eval 'using Pkg; pkg"add Gumbo AbstractTrees Glob NCDatasets Knet CSV"'
+RUN julia --eval 'using Pkg; pkg"add DataStructures Compat Mustache"'
 
-RUN i=PhysOcean; julia --eval "using Pkg; Pkg.add(\"$i\")"
-#RUN i=PhysOcean; julia --eval "using Pkg; Pkg.checkout(\"$i\")"
+RUN julia --eval 'using Pkg; pkg"add PhysOcean"'
+#RUN julia --eval 'using Pkg; pkg"dev PhysOcean"'
 
-RUN i=OceanPlot;  julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/gher-ulg/$i.jl\",rev=\"master\"))"
-#RUN i=DIVAnd; julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/gher-ulg/$i.jl\",rev=\"master\"))"
-RUN i=DIVAnd; julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/gher-ulg/$i.jl\",rev=\"master\"))"
+RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/OceanPlot.jl#master"'
+RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAnd.jl#master"'
+RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/WebDAV.jl#master"'
 
-RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\")"
-RUN julia --eval "using Pkg; Pkg.add(\"Mustache\")"
-#RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
-RUN julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/Alexander-Barth/WebDAV.jl\",rev=\"master\"));"
 
 
 #USER root
@@ -102,10 +83,6 @@ RUN cd  /data;  \
     rm /data/master.zip
 
 
-USER jovyan
-
-
-ADD emacs /home/jovyan/.emacs
 
 USER root
 RUN apt-get install -y gosu
