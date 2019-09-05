@@ -42,31 +42,36 @@ USER jovyan
 
 #RUN julia --eval 'using Pkg; Pkg.init()'
 
-RUN i=ZMQ; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=IJulia; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=NetCDF; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=PyPlot; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Interpolations; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=MAT; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-#RUN i=JLD; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=JSON; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=SpecialFunctions; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Interact; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Roots; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Gumbo; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=AbstractTrees; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Glob; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=NCDatasets;   julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Knet; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=ZMQ; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=IJulia; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=NetCDF; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=PyPlot; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Interpolations; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=MAT; julia --eval "using Pkg; Pkg.add(\"$i\")"
+#RUN i=JLD; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=JSON; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=SpecialFunctions; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Interact; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Roots; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Gumbo; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=AbstractTrees; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Glob; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=NCDatasets;   julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Knet; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=CSV; julia --eval "using Pkg; Pkg.add(\"$i\")"
 
-RUN i=PhysOcean; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
+RUN i=PhysOcean; julia --eval "using Pkg; Pkg.add(\"$i\")"
+#RUN i=PhysOcean; julia --eval "using Pkg; Pkg.checkout(\"$i\")"
 
-RUN i=OceanPlot;  julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
-RUN i=DIVAnd;        julia --eval "using Pkg; Pkg.clone(\"https://github.com/gher-ulg/$i.jl\"); Pkg.build(\"$i\"); using $i"
+RUN i=OceanPlot;  julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/gher-ulg/$i.jl\",rev=\"master\"))"
+#RUN i=DIVAnd; julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/gher-ulg/$i.jl\",rev=\"master\"))"
+RUN i=DIVAnd; julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/gher-ulg/$i.jl\",rev=\"master\"))"
 
-
-#RUN i=PhysOcean; julia --eval "using Pkg; Pkg.checkout(\"$i\"); using $i"
+RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\")"
+RUN julia --eval "using Pkg; Pkg.add(\"Mustache\")"
+#RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
+RUN julia --eval "using Pkg; Pkg.add(PackageSpec(url=\"https://github.com/Alexander-Barth/WebDAV.jl\",rev=\"master\"));"
 
 
 #USER root
@@ -98,12 +103,6 @@ RUN cd  /data;  \
 
 
 USER jovyan
-RUN i=DataStructures; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-RUN i=Compat; julia --eval "using Pkg; Pkg.add(\"$i\"); using $i"
-#RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Tables\", version=\"0.1.12\"))"
-#RUN julia --eval "using Pkg; Pkg.add(PackageSpec(name=\"Mustache\", version=\"0.5.8\"))"
-RUN julia --eval "using Pkg; Pkg.add(\"Mustache\")"
-RUN julia --eval "using Pkg; Pkg.clone(\"https://github.com/Alexander-Barth/WebDAV.jl\")"
 
 
 ADD emacs /home/jovyan/.emacs
