@@ -50,7 +50,7 @@ RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAnd.jl#maste
 RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/WebDAV.jl#master"'
 
 # no depreciation warnings
-RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.2/kernel.json
+RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.3/kernel.json
 
 
 USER root
