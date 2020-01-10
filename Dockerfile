@@ -81,5 +81,8 @@ RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /da
 ADD run.sh /usr/local/bin/run.sh
 USER jovyan
 
+RUN julia -e 'using IJulia; IJulia.installkernel("Julia with 4 CPUs",env = Dict("JULIA_NUM_THREADS" => "4"))'
+
+ENV JUPYTER_ENABLE_LAB yes
 
 CMD ["bash", "/usr/local/bin/run.sh"]
