@@ -11,7 +11,7 @@ before_install:
   - docker run --detach --name=diva-julia-container -it -p 8002:8002 abarth/diva-julia
   - docker ps -a
 script:
-  - docker run abarth/diva-julia /opt/julia-1.3.0/bin/julia --eval 'import Pkg; Pkg.test("DIVAnd")'
+  - docker run abarth/diva-julia /opt/julia/bin/julia --eval 'import Pkg; Pkg.test("DIVAnd")'
 after_success:
   - if [ "$TRAVIS_BRANCH" == master ]; then
        echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin;

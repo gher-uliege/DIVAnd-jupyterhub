@@ -48,6 +48,7 @@ RUN julia --eval 'using Pkg; pkg"add PhysOcean"'
 RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/OceanPlot.jl#master"'
 RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAnd.jl#master"'
 RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/WebDAV.jl#master"'
+RUN julia --eval 'using Pkg; pkg"add Missings"'
 
 # no depreciation warnings
 RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.3/kernel.json
@@ -79,10 +80,23 @@ USER root
 RUN mkdir /data/Diva-Workshops-data
 RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /data/Diva-Workshops-data -zxf -
 ADD run.sh /usr/local/bin/run.sh
+RUN ln -s /opt/julia-* /opt/julia
 USER jovyan
 
 RUN julia -e 'using IJulia; IJulia.installkernel("Julia with 4 CPUs",env = Dict("JULIA_NUM_THREADS" => "4"))'
 
-ENV JUPYTER_ENABLE_LAB yes
+#ENV JUPYTER_ENABLE_LAB yes
+
+## use 33 (www-data) as nextcloud
+#USER root
+## user id 33 -> 200 (unused)
+#RUN usermod -u 200 www-data
+#RUN groupmod -g 200 www-data
+## user id 1000 -> 33
+#RUN usermod -u 33 jovyan
+#RUN find /home /var /tmp -user 1000 -exec chown 33.100 {} \;
+#RUN find /home /var /tmp -user 33 -exec chown 200.200 {} \;
+##RUN ls -ld /home
+#USER jovyan
 
 CMD ["bash", "/usr/local/bin/run.sh"]
