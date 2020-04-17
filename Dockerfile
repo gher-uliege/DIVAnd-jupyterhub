@@ -1,7 +1,7 @@
 # build as:
-# sudo docker build -t abarth/diva-julia .
+# sudo docker build  --tag abarth/divand-jupyterhub:$(date --utc +%Y-%m-%dT%H%M)  --tag abarth/divand-jupyterhub:latest .
 
-FROM jupyterhub/singleuser:1.0
+FROM jupyterhub/singleuser:1.1.dev
 
 MAINTAINER Alexander Barth <a.barth@ulg.ac.be>
 
@@ -81,11 +81,25 @@ RUN mkdir /data/Diva-Workshops-data
 RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /data/Diva-Workshops-data -zxf -
 ADD run.sh /usr/local/bin/run.sh
 RUN ln -s /opt/julia-* /opt/julia
+
 USER jovyan
 
 RUN julia -e 'using IJulia; IJulia.installkernel("Julia with 4 CPUs",env = Dict("JULIA_NUM_THREADS" => "4"))'
 
+
+# Pre-compiled image with PackageCompiler
+RUN julia --eval 'using Pkg; pkg"add PackageCompiler"'
+ADD DIVAnd_precompile_script.jl .
+ADD make_sysimg.sh .
+RUN ./make_sysimg.sh
+RUN mkdir -p /home/jovyan/.local
+RUN mv sysimg_DIVAnd.so DIVAnd_precompile_script.jl make_sysimg.sh  DIVAnd_trace_compile.jl  /home/jovyan/.local
+RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled)", "--sysimage=/home/jovyan/.local/sysimg_DIVAnd.so")'
+RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled, 4 CPUs)", "--sysimage=/home/jovyan/.local/sysimg_DIVAnd.so",env = Dict("JULIA_NUM_THREADS" => "4"))'
+
 #ENV JUPYTER_ENABLE_LAB yes
+
+
 
 ## use 33 (www-data) as nextcloud
 #USER root
