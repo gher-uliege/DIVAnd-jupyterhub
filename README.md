@@ -16,8 +16,7 @@ julia> @time include(joinpath(dirname(pathof(DIVAnd)),"..","test","test_product.
 188.275971 seconds (754.34 M allocations: 49.429 GiB, 7.16% gc time)
 ```
 
-When you first load and run a package in a session, Julia need to compile it first. This creates some overhead on first use with can be 
-removed by using a precompiled image:
+When you first load and run a package in a session, Julia needs to compile it first. This creates some overhead on first use with can be removed by using a precompiled image:
 
 
 ```julia
