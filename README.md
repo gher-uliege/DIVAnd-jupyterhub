@@ -5,7 +5,7 @@
 
 Load-time of DIVAnd and simple analysis without precompiled image:
 
-```
+```julia
 julia> @time using DIVAnd
 @time include(joinpath(dirname(pathof(DIVAnd)),"..","test","test_product.jl"))
   6.423211 seconds (11.08 M allocations: 549.436 MiB, 2.36% gc time)
