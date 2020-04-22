@@ -94,6 +94,7 @@ ADD make_sysimg.sh .
 RUN ./make_sysimg.sh
 RUN mkdir -p /home/jovyan/.local
 RUN mv sysimg_DIVAnd.so DIVAnd_precompile_script.jl make_sysimg.sh  DIVAnd_trace_compile.jl  /home/jovyan/.local
+RUN rm -f test.xml Water_body_Salinity.3Danl.nc Water_body_Salinity.4Danl.cdi_import_errors_test.csv Water_body_Salinity.4Danl.nc Water_body_Salinity2.4Danl.nc
 RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled)", "--sysimage=/home/jovyan/.local/sysimg_DIVAnd.so")'
 RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled, 4 CPUs)", "--sysimage=/home/jovyan/.local/sysimg_DIVAnd.so",env = Dict("JULIA_NUM_THREADS" => "4"))'
 
