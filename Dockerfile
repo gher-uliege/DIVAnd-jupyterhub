@@ -1,7 +1,7 @@
 # build as:
 # sudo docker build  --tag abarth/divand-jupyterhub:$(date --utc +%Y-%m-%dT%H%M)  --tag abarth/divand-jupyterhub:latest .
 
-FROM jupyterhub/singleuser:1.1.dev
+FROM jupyterhub/singleuser:1.2
 
 MAINTAINER Alexander Barth <a.barth@ulg.ac.be>
 
@@ -79,7 +79,6 @@ USER root
 # Example Data
 RUN mkdir /data/Diva-Workshops-data
 RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /data/Diva-Workshops-data -zxf -
-ADD run.sh /usr/local/bin/run.sh
 RUN ln -s /opt/julia-* /opt/julia
 
 USER jovyan
@@ -100,7 +99,9 @@ RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled, 4 C
 
 #ENV JUPYTER_ENABLE_LAB yes
 
-
+USER root
+ADD run.sh /usr/local/bin/run.sh
+USER jovyan
 
 ## use 33 (www-data) as nextcloud
 #USER root
