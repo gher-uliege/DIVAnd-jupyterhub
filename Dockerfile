@@ -115,4 +115,8 @@ USER jovyan
 ##RUN ls -ld /home
 #USER jovyan
 
+
+COPY ./healthcheck_notebook.sh /bin/healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=10s CMD /bin/healthcheck.sh
+
 CMD ["bash", "/usr/local/bin/run.sh"]
