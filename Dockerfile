@@ -99,9 +99,6 @@ RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled, 4 C
 
 #ENV JUPYTER_ENABLE_LAB yes
 
-USER root
-ADD run.sh /usr/local/bin/run.sh
-USER jovyan
 
 ## use 33 (www-data) as nextcloud
 #USER root
@@ -114,5 +111,15 @@ USER jovyan
 #RUN find /home /var /tmp -user 33 -exec chown 200.200 {} \;
 ##RUN ls -ld /home
 #USER jovyan
+
+USER root
+ENV NB_UID 501
+ENV NB_GID 501
+RUN chown -R "$NB_UID":"$NB_GID" /home/jovyan/.local  /home/jovyan/.julia
+
+
+USER root
+ADD run.sh /usr/local/bin/run.sh
+USER jovyan
 
 CMD ["bash", "/usr/local/bin/run.sh"]
