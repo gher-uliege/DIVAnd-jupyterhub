@@ -117,9 +117,11 @@ ENV NB_UID 501
 ENV NB_GID 501
 RUN chown -R "$NB_UID":"$NB_GID" /home/jovyan/.local  /home/jovyan/.julia
 
-
 USER root
 ADD run.sh /usr/local/bin/run.sh
 USER jovyan
+
+COPY ./healthcheck_notebook.sh /bin/healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=10s CMD /bin/healthcheck.sh
 
 CMD ["bash", "/usr/local/bin/run.sh"]
