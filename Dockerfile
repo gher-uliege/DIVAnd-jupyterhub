@@ -49,6 +49,8 @@ RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/OceanPlot.jl#ma
 RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAnd.jl#master"'
 RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/WebDAV.jl#master"'
 RUN julia --eval 'using Pkg; pkg"add Missings"'
+RUN julia --eval 'using Pkg; pkg"add DataAssim"'
+RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/GeoMapping.jl#master"'
 
 # no depreciation warnings
 RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.4/kernel.json
@@ -99,6 +101,10 @@ RUN julia -e 'using IJulia; IJulia.installkernel("Julia (DIVAnd precompiled, 4 C
 
 #ENV JUPYTER_ENABLE_LAB yes
 
+
+USER root
+ADD run.sh /usr/local/bin/run.sh
+USER jovyan
 
 ## use 33 (www-data) as nextcloud
 #USER root
