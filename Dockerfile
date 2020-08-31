@@ -50,10 +50,11 @@ RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAnd.jl#maste
 RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/WebDAV.jl#master"'
 RUN julia --eval 'using Pkg; pkg"add Missings"'
 RUN julia --eval 'using Pkg; pkg"add DataAssim"'
+RUN julia --eval 'using Pkg; pkg"add StableRNGs"'
 RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/GeoMapping.jl#master"'
 
 # no depreciation warnings
-RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.4/kernel.json
+RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.5/kernel.json
 
 
 USER root
@@ -66,7 +67,7 @@ RUN rm -R /opt/conda/share/jupyter/kernels/python3
 
 # Download notebooks
 RUN mkdir /data
-RUN cd  /data;  \
+RUN cd   /data;  \
     wget -O master.zip https://github.com/gher-ulg/Diva-Workshops/archive/master.zip; unzip master.zip; \
     rm /data/master.zip
 
