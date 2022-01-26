@@ -1,7 +1,8 @@
 # build as:
 # sudo docker build  --tag abarth/divand-jupyterhub:$(date --utc +%Y-%m-%dT%H%M)  --tag abarth/divand-jupyterhub:latest .
 
-FROM jupyterhub/singleuser:1.2
+
+FROM jupyterhub/singleuser:2.0
 
 MAINTAINER Alexander Barth <a.barth@ulg.ac.be>
 
@@ -10,12 +11,9 @@ EXPOSE 8888
 USER root
 
 RUN apt-get update
-RUN apt-get install -y libnetcdf-dev netcdf-bin
-RUN apt-get install -y unzip
+RUN apt-get install -y libnetcdf-dev netcdf-bin unzip
 RUN apt-get install -y ca-certificates curl libnlopt0 make gcc 
-RUN apt-get install -y libzmq3-dev
-RUN apt-get install -y emacs-nox vim
-RUN apt-get install -y git g++
+RUN apt-get install -y emacs-nox git g++
 
 ENV JUPYTER /opt/conda/bin/jupyter
 ENV PYTHON /opt/conda/bin/python
@@ -23,38 +21,23 @@ ENV LD_LIBRARY_PATH /opt/conda/lib/
 
 RUN conda install -y ipywidgets
 RUN conda install -y matplotlib
+RUN conda install -c conda-forge jupyterlab-git
 
 RUN wget -O /usr/share/emacs/site-lisp/julia-mode.el https://raw.githubusercontent.com/JuliaEditorSupport/julia-emacs/master/julia-mode.el
 
 # Install julia
-
 ADD install_julia.sh .
-RUN bash install_julia.sh
-RUN rm install_julia.sh
+RUN bash install_julia.sh; rm install_julia.sh
 
 # install packages as user (to that the user can temporarily update them if necessary)
 # and precompilation
 
 USER jovyan
 
-RUN julia --eval 'using Pkg; pkg"add ZMQ IJulia PyPlot Interpolations MAT"'
-RUN julia --eval 'using Pkg; pkg"add JSON SpecialFunctions Interact Roots"'
-RUN julia --eval 'using Pkg; pkg"add Gumbo AbstractTrees Glob NCDatasets Knet CSV"'
-RUN julia --eval 'using Pkg; pkg"add DataStructures Compat Mustache"'
-RUN julia --eval 'using Pkg; pkg"add HTTP"'
+ENV LD_LIBRARY_PATH=
+ENV JULIA_PACKAGES="CSV DataAssim DIVAnd DataStructures FFTW FileIO Glob HTTP IJulia ImageIO Images Interact Interpolations JSON Knet MAT Missings NCDatasets PackageCompiler PhysOcean PyCall PyPlot Roots SpecialFunctions StableRNGs VideoIO"
 
-RUN julia --eval 'using Pkg; pkg"add PhysOcean"'
-#RUN julia --eval 'using Pkg; pkg"dev PhysOcean"'
-RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/OceanPlot.jl#master"'
-RUN julia --eval 'using Pkg; pkg"add https://github.com/gher-ulg/DIVAnd.jl#master"'
-RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/WebDAV.jl#master"'
-RUN julia --eval 'using Pkg; pkg"add Missings"'
-RUN julia --eval 'using Pkg; pkg"add DataAssim"'
-RUN julia --eval 'using Pkg; pkg"add StableRNGs"'
-RUN julia --eval 'using Pkg; pkg"add https://github.com/Alexander-Barth/GeoMapping.jl#master"'
-
-# no depreciation warnings
-RUN sed -i 's/"-i",/"-i", "--depwarn=no",/' /home/jovyan/.local/share/jupyter/kernels/julia-1.5/kernel.json
+RUN julia --eval 'using Pkg; Pkg.add(split(ENV["JULIA_PACKAGES"]))'
 
 
 USER root
