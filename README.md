@@ -1,5 +1,24 @@
 
 
+## Build
+
+```bash
+docker build . --no-cache --tag abarth/divand-jupyterhub:$(date --utc +%Y-%m-%dT%H%M)  --tag abarth/divand-jupyterhub:latest
+docker push abarth/divand-jupyterhub:latest
+```
+
+Link to registery:
+
+https://hub.docker.com/repository/docker/abarth/divand-jupyterhub
+
+## Deploy
+
+
+```bash
+docker pull abarth/divand-jupyterhub:latest
+```
+
+
 ## Precompiled DIVAnd with `PackageCompiler`
 
 

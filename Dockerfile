@@ -19,6 +19,7 @@ ENV JUPYTER /opt/conda/bin/jupyter
 ENV PYTHON /opt/conda/bin/python
 ENV LD_LIBRARY_PATH /opt/conda/lib/
 
+RUN conda install -c conda-forge ncurses
 RUN conda install -y ipywidgets
 RUN conda install -y matplotlib
 RUN conda install -c conda-forge jupyterlab-git
