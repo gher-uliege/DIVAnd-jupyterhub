@@ -2,7 +2,7 @@
 # sudo docker build  --tag abarth/divand-jupyterhub:$(date --utc +%Y-%m-%dT%H%M)  --tag abarth/divand-jupyterhub:latest .
 
 
-FROM jupyterhub/singleuser:2.0
+FROM jupyterhub/singleuser:3.1
 
 MAINTAINER Alexander Barth <a.barth@ulg.ac.be>
 
