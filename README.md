@@ -19,6 +19,14 @@ docker pull abarth/divand-jupyterhub:latest
 ```
 
 
+## Testing
+
+The docker image is intended to be run with JupyterHub, to test the container locally independently from JupyterHub one can use:
+
+```
+docker run -it  -p 8888:8888  abarth/divand-jupyterhub:latest  jupyter-lab
+```
+
 ## Precompiled DIVAnd with `PackageCompiler`
 
 
