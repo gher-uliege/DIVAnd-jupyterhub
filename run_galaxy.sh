@@ -35,7 +35,7 @@ if test -n "$NB_UID"; then
 fi
 
 
-jupyter trust /work/DIVAnd-Workshop/notebooks/*/*.ipynb
+jupyter trust /home/$NB_USER/work/DIVAnd-Workshop/notebooks/*/*.ipynb
 
 jupyter lab --no-browser
 
