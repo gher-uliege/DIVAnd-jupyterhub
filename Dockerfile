@@ -50,10 +50,13 @@ RUN mv -i /opt/conda/lib/libcurl.so.4 /opt/conda/lib/libcurl.so.4-conda
 RUN rm -R /opt/conda/share/jupyter/kernels/python3
 
 # Download notebooks
-RUN mkdir /data
-RUN cd   /data;  \
+RUN mkdir -p /home/$NB_USER/
+RUN cd   /home/$NB_USER/;  \
     wget -O master.zip https://github.com/gher-ulg/Diva-Workshops/archive/master.zip; unzip master.zip; \
-    rm /data/master.zip
+    rm /home/$NB_USER/master.zip
+ 
+RUN mv /home/$NB_USER/Diva-Workshops-master/notebooks /home/$NB_USER
+RUN rm -r /home/$NB_USER/Diva-Workshops-master
 
 USER jovyan
 ADD emacs /home/jovyan/.emacs
@@ -64,6 +67,7 @@ RUN julia --eval 'using Pkg; pkg"precompile"'
 
 USER root
 # Example Data
+RUN mkdir /data
 RUN mkdir /data/Diva-Workshops-data
 RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /data/Diva-Workshops-data -zxf -
 RUN ln -s /opt/julia-* /opt/julia
