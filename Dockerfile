@@ -93,7 +93,7 @@ RUN julia -e 'using IJulia; IJulia.installkernel("Julia-DIVAnd precompiled, 4 CP
 
 
 USER root
-ADD run.sh /usr/local/bin/run.sh
+ADD run_galaxy.sh /usr/local/bin/run_galaxy.sh
 USER jovyan
 
 ## use 33 (www-data) as nextcloud
@@ -112,4 +112,4 @@ USER jovyan
 COPY ./healthcheck_notebook.sh /bin/healthcheck.sh
 HEALTHCHECK --interval=30s --timeout=10s CMD /bin/healthcheck.sh
 
-CMD ["bash", "/usr/local/bin/run.sh"]
+CMD ["bash", "/usr/local/bin/run_galaxy.sh"]
