@@ -112,4 +112,10 @@ USER jovyan
 COPY ./healthcheck_notebook.sh /bin/healthcheck.sh
 HEALTHCHECK --interval=30s --timeout=10s CMD /bin/healthcheck.sh
 
+# issue https://github.com/gher-uliege/DIVAnd-jupyterhub/issues/6
+# This should not be necessary anymore for julia 1.9
+# We are assuming the python is compiled with a newer libstdc++ than julia
+# (otherwise the file should not be removed)
+RUN ["/bin/sh","-c","rm /opt/julia-1.8.*/lib/julia/libstdc++.so.*"]
+
 CMD ["bash", "/usr/local/bin/run_galaxy.sh"]
