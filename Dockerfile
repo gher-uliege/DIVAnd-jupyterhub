@@ -15,6 +15,7 @@ RUN apt-get install -y libnetcdf-dev netcdf-bin unzip
 RUN apt-get install -y ca-certificates curl libnlopt0 make gcc 
 RUN apt-get install -y emacs-nox git g++
 
+
 ENV JUPYTER /opt/conda/bin/jupyter
 ENV PYTHON /opt/conda/bin/python
 ENV LD_LIBRARY_PATH /opt/conda/lib/
@@ -23,6 +24,7 @@ RUN conda install -c conda-forge ncurses
 RUN conda install -y ipywidgets
 RUN conda install -y matplotlib
 RUN conda install -c conda-forge jupyterlab-git
+RUN conda install -c conda-forge contourpy 
 
 RUN wget -O /usr/share/emacs/site-lisp/julia-mode.el https://raw.githubusercontent.com/JuliaEditorSupport/julia-emacs/master/julia-mode.el
 
@@ -45,7 +47,7 @@ USER root
 # avoid warning
 # curl: /opt/conda/lib/libcurl.so.4: no version information available (required by curl)
 RUN mv -i /opt/conda/lib/libcurl.so.4 /opt/conda/lib/libcurl.so.4-conda
-
+RUN rm /opt/julia-1.8.3/bin/../lib/julia/libstdc++.so.6 
 # remove unused kernel
 RUN rm -R /opt/conda/share/jupyter/kernels/python3
 
@@ -72,11 +74,12 @@ RUN mkdir /data/Diva-Workshops-data
 RUN curl https://dox.ulg.ac.be/index.php/s/Px6r7MPlpXAePB2/download | tar -C /data/Diva-Workshops-data -zxf -
 RUN ln -s /opt/julia-* /opt/julia
 
-USER jovyan
+#USER jovyan
 
 RUN julia -e 'using IJulia; IJulia.installkernel("Julia with 4 CPUs",env = Dict("JULIA_NUM_THREADS" => "4"))'
 
 
+USER root
 # Pre-compiled image with PackageCompiler
 RUN julia --eval 'using Pkg; pkg"add PackageCompiler"'
 ADD DIVAnd_precompile_script.jl .
@@ -91,9 +94,23 @@ RUN julia -e 'using IJulia; IJulia.installkernel("Julia-DIVAnd precompiled, 4 CP
 #ENV JUPYTER_ENABLE_LAB yes
 
 
+ENV DEBUG=false \
+    GALAXY_WEB_PORT=10000 \
+    NOTEBOOK_PASSWORD=none \
+    CORS_ORIGIN=none \
+    DOCKER_PORT=none \
+    API_KEY=none \
+    HISTORY_ID=none \
+    REMOTE_HOST=none \
+    GALAXY_URL=none
 
-USER root
+#USER root
 ADD run_galaxy.sh /usr/local/bin/run_galaxy.sh
+
+COPY ./jupyter_notebook_config.py /home/$NB_USER/.jupyter/
+
+RUN mamba install -c conda-forge jupytext==1.14.1
+
 USER jovyan
 
 ## use 33 (www-data) as nextcloud
