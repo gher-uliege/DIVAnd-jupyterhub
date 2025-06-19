@@ -1,4 +1,6 @@
-
+![GitHub language count](https://img.shields.io/github/languages/count/gher-uliege/DIVAnd-jupyterhub) ![GitHub top language](https://img.shields.io/github/languages/top/gher-uliege/DIVAnd-jupyterhub)           
+![GitHub issues](https://img.shields.io/github/issues/gher-uliege/DIVAnd-jupyterhub) ![GitHub contributors](https://img.shields.io/github/contributors/gher-uliege/DIVAnd-jupyterhub) ![GitHub last commit](https://img.shields.io/github/last-commit/gher-uliege/DIVAnd-jupyterhub)      
+[![Static Badge](https://img.shields.io/badge/Project-FAIR--EASE-blue)](https://fairease.eu/)  [![Static Badge](https://img.shields.io/badge/Project-Blue--Cloud--2026-blue)](https://blue-cloud.org/)
 
 ## Build
 
